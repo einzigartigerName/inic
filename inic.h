@@ -25,4 +25,6 @@ typedef struct{
     ini_section_t   **sections;
 } ini_file_t;
 
-ini_file_t *parse_file(char *path);
+ini_file_t      *parse_file(char *path);
+ini_section_t   *get_section(ini_file_t *ini, char *name, int index);
+char            *get_value(ini_section_t *section, char *key);

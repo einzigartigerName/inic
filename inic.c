@@ -177,3 +177,38 @@ ini_file_t *parse_file(char *path){
     // return array of sections
     return ini_file;
 }
+
+
+/*
+* @param ini_file_t* - struct with parsed ini file
+* @param char* - section name to get
+* @param int - index if multiple sections with the same name exist
+* @return ini_section_t* - found section (if not found NULL)
+*/
+ini_section_t *get_section(ini_file_t *ini, char *name, int index){
+    int tmp = 0;
+    for(int i = 0; i < ini->nsections; i++){
+        if(strncmp(ini->sections[i]->name, name, strlen(name)) == 0){
+            if(tmp == index)
+                return ini->sections[i];
+            else
+                tmp++;
+        }
+    }
+    return NULL;
+}
+
+
+/*
+* @param ini_section_t* - section in which to look for key-value pair
+* @param char* - key name
+* @return ini_section_t* - found value to key (if not found NULL)
+*/
+char *get_value(ini_section_t *section, char *key){
+    for(int i = 0; i < section->nkeys; i++){
+        if(strncmp(section->keys[i]->key, key, strlen(key)) == 0){
+            return section->keys[i]->value;
+        }
+    }
+    return NULL;
+}

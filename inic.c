@@ -38,7 +38,50 @@ ini_section_t *parse_section(char *line){
 * @return ini_key_t* - parsed key with value
 */
 ini_key_t *parse_key(char *line){
-    return NULL;
+    // if assignment already started
+    int assign_started = 0;
+
+    // key and value length to cpy in ini_key_t
+    int key_len = 0;
+    int value_len = 0;
+
+    // char* key for ini_key_t->key
+    char *value_start = NULL;
+
+    char *current = line;
+    for(size_t i = 0; (i < strlen(line)) && (*current != '\n'); i++){
+        if(*current != '='){
+            if(assign_started == 0)
+                key_len++;
+            else
+                value_len++;
+
+            current = current + 1;
+        } else {
+            assign_started = 1;
+            current = current + 1;
+            value_start = current;
+        }
+    }
+
+    // cpy key and value string into seperat string
+    char *key = malloc((key_len + 1) * sizeof(char));
+    MALLOC_CHECK(key);
+    char *value = malloc((value_len + 1) * sizeof(char));
+    MALLOC_CHECK(value);
+
+    strncpy(key, line, key_len);
+    key[key_len] = '\0';
+
+    strncpy(value, value_start, value_len);
+    value[value_len] = '\0';
+
+    // create ini_key_t to return
+    ini_key_t *out = malloc(sizeof(ini_key_t));
+    out->key = key;
+    out->value = value;
+
+    return out;
 }
 
 
